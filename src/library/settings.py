@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'library.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'librarydb',
+        'USER': 'library_admin',
+        'PASSWORD': 'L1br4ry_s3cr3t',
+        'HOST': 'postgres_library',
+        'PORT': '5432',
     }
 }
 
