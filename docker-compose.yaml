@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+
+  library-svc:
+    container_name: library-svc
+    image: library-svc
+    build: .
+    entrypoint: python /app/src/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    networks:
+      - library-svc-net
+    depends_on:
+      - postgres
+      - migration
+    environment:
+      - RUNTYPE=bash
+
+  migration:
+    container_name: library-migration
+    image: library-svc
+    build: .
+    command: python /app/src/manage.py migrate --noinput
+    networks:
+      - library-svc-net
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: postgres_library
+    image: postgres:13.13-alpine
+    environment:
+      POSTGRES_DB: librarydb
+      POSTGRES_USER: library_admin
+      POSTGRES_PASSWORD: L1br4ry_s3cr3t
+    ports:
+      - '5438:5432'
+    networks:
+      - library-svc-net
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+networks:
+  library-svc-net:
+    name: library-svc-net
+
+volumes:
+  pgdata:
