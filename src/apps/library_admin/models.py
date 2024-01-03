@@ -1,3 +1,20 @@
 from django.db import models
 
-# Create your models here.
+
+class Author(models.Model):
+    name = models.CharField(max_length=150, unique=True, blank=False, null=False)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True, blank=False, null=False)
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=200, blank=False, null=False)
+    subtitle = models.CharField(max_length=200, blank=False, null=False)
+    author = models.ManyToManyField(Author)
+    category = models.ManyToManyField(Category)
+    publication_date = models.DateTimeField(blank=False, null=False)
+    editor = models.CharField(max_length=150, blank=False, null=False)
+    description = models.TextField(null=False)
+    image = models.CharField(blank=True, null=True)
