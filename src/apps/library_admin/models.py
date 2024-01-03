@@ -16,7 +16,7 @@ class Book(models.Model):
     category = models.ManyToManyField(
         Category, related_name="categories", db_index=False
     )
-    publication_date = models.DateTimeField(blank=False, null=False)
+    publication_date = models.DateField(blank=False, null=False)
     editor = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(null=False)
     image = models.CharField(blank=True, null=True)
