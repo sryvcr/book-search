@@ -12,8 +12,10 @@ class Category(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     subtitle = models.CharField(max_length=200, blank=False, null=False)
-    author = models.ManyToManyField(Author)
-    category = models.ManyToManyField(Category)
+    author = models.ManyToManyField(Author, related_name="authors", db_index=False)
+    category = models.ManyToManyField(
+        Category, related_name="categories", db_index=False
+    )
     publication_date = models.DateTimeField(blank=False, null=False)
     editor = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(null=False)
