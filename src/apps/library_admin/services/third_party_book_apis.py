@@ -36,12 +36,12 @@ def __build_book_dataclass_from_google_books_api_data(
     try:
         authors = book_data["volumeInfo"]["authors"]
     except KeyError:
-        authors = ""
+        authors = []
 
     try:
         categories = book_data["categories"]
     except KeyError:
-        categories = ""
+        categories = []
 
     try:
         editor = book_data["volumeInfo"]["publisher"]
