@@ -12,3 +12,4 @@ class BookDataclass:
     editor: str
     description: str
     image: str | None
+    source: str

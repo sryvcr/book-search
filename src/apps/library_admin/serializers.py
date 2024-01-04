@@ -11,3 +11,4 @@ class BookSerializer(serializers.Serializer):
     editor = serializers.ReadOnlyField()
     description = serializers.ReadOnlyField()
     image = serializers.ReadOnlyField()
+    source = serializers.ReadOnlyField()
