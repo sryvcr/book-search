@@ -16,57 +16,65 @@ def get_book_from_google_api_by_search_parameter(search: str) -> list[BookDatacl
 
     if "items" in json_response:
         for item in json_response["items"]:
-            title = item["volumeInfo"]["title"]
-
-            try:
-                subtitle = item["volumeInfo"]["subtitle"]
-            except KeyError:
-                subtitle = ""
-
-            try:
-                authors = item["volumeInfo"]["authors"]
-            except KeyError:
-                authors = ""
-
-            try:
-                categories = item["categories"]
-            except KeyError:
-                categories = ""
-
-            try:
-                editor = item["volumeInfo"]["publisher"]
-            except KeyError:
-                editor = ""
-
-            try:
-                publication_date = item["volumeInfo"]["publishedDate"]
-            except KeyError:
-                publication_date = ""
-
-            try:
-                description = item["volumeInfo"]["description"]
-            except KeyError:
-                description = ""
-
-            try:
-                image = item["imageLinks"]["thumbnail"]
-            except KeyError:
-                image = ""
-
             books.append(
-                build_dataclass_from_dict(
-                    klass=BookDataclass,
-                    data=item,
-                    title=title,
-                    subtitle=subtitle,
-                    authors=authors,
-                    categories=categories,
-                    publication_date=publication_date,
-                    editor=editor,
-                    description=description,
-                    image=image,
-                    source=library_admin_constants.GOOGLE_BOOKS_API_SOURCE,
-                )
+                __build_book_dataclass_from_google_books_api_data(book_data=item)
             )
 
     return books
+
+
+def __build_book_dataclass_from_google_books_api_data(
+    book_data: dict
+) -> BookDataclass:
+    title = book_data["volumeInfo"]["title"]
+
+    try:
+        subtitle = book_data["volumeInfo"]["subtitle"]
+    except KeyError:
+        subtitle = ""
+
+    try:
+        authors = book_data["volumeInfo"]["authors"]
+    except KeyError:
+        authors = ""
+
+    try:
+        categories = book_data["categories"]
+    except KeyError:
+        categories = ""
+
+    try:
+        editor = book_data["volumeInfo"]["publisher"]
+    except KeyError:
+        editor = ""
+
+    try:
+        publication_date = book_data["volumeInfo"]["publishedDate"]
+    except KeyError:
+        publication_date = ""
+
+    try:
+        description = book_data["volumeInfo"]["description"]
+    except KeyError:
+        description = ""
+
+    try:
+        image = book_data["imageLinks"]["thumbnail"]
+    except KeyError:
+        image = ""
+
+    return (
+        build_dataclass_from_dict(
+            klass=BookDataclass,
+            data=book_data,
+            title=title,
+            subtitle=subtitle,
+            authors=authors,
+            categories=categories,
+            publication_date=publication_date,
+            editor=editor,
+            description=description,
+            image=image,
+            source=library_admin_constants.GOOGLE_BOOKS_API_SOURCE,
+        )
+    )
