@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.library_admin.exceptions import BookAlreadyCreated
+from apps.library_admin.responses.error import BookAlreadyExistsResponse
 from apps.library_admin.services import book as book_services
 from apps.library_admin.services import third_party_book_apis as book_apis_services
 from apps.library_admin.serializers import BookSerializer
@@ -36,7 +37,7 @@ class BookAPIView(APIView):
                 book_id=book_id, source=source
             )
         except BookAlreadyCreated as err:
-            return Response(str(err.msg), status=status.HTTP_400_BAD_REQUEST)
+            return BookAlreadyExistsResponse(error_msg=err.msg)
 
         serializer = BookSerializer(book)
 
