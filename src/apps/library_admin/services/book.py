@@ -74,7 +74,7 @@ def create_book_from_external_source(book_id: str, source: str) -> BookDataclass
 
                 for category in book.categories:
                     try:
-                        category = category_providers.get_category_id_by_category_name(
+                        category = category_providers.get_category_by_category_name(
                             author_name=author
                         )
                         categories.append(category)

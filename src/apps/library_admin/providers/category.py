@@ -8,7 +8,7 @@ def get_book_category_names_by_book_id(book_id: int) -> QuerySet:
     return Category.objects.filter(book__id=book_id).values_list("name", flat=True)
 
 
-def get_category_id_by_category_name(category_name: str) -> bool:
+def get_category_by_category_name(category_name: str) -> bool:
     try:
         return Category.objects.get(name=category_name)
     except Category.DoesNotExist:
