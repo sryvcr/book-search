@@ -106,7 +106,7 @@ def create_book_from_external_source(book_id: str, source: str) -> BookDataclass
                 source=library_admin_constants.INTERNAL_SOURCE,
             )
         else:
-            raise BookAlreadyCreated("The book is already created")
+            raise BookAlreadyCreated(book_title=book.title)
 
     return None
 

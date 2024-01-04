@@ -36,7 +36,7 @@ class BookAPIView(APIView):
                 book_id=book_id, source=source
             )
         except BookAlreadyCreated as err:
-            return Response(str(err), status=status.HTTP_400_BAD_REQUEST)
+            return Response(str(err.msg), status=status.HTTP_400_BAD_REQUEST)
 
         serializer = BookSerializer(book)
 
