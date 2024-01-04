@@ -18,6 +18,7 @@ services:
       - .:/app
     environment:
       - RUNTYPE=bash
+      - PYTHONUNBUFFERED=1
 
   migration:
     container_name: library-migration
