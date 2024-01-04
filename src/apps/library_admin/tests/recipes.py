@@ -30,9 +30,6 @@ book_system_design_interview = Recipe(
     editor="ByteByteGo",
     description="System Design Interview book description",
     image="http://books.google.com.co/books?id=TZWmzQEACAAJ&dq=alex+xu&hl=&cd=2&source=gbs_api",
-    # image=get_or_create_foreign_reference(
-    #     recipe=city_scl, field_name="id", country="CL", code="SCL"
-    # ),
     author=related(
         author_alex_xu,
         author_sahn_lam,
