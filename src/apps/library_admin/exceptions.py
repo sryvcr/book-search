@@ -9,6 +9,10 @@ class CategoryDoesNotExist(ObjectDoesNotExist):
     pass
 
 
+class BookDoesNotExist(ObjectDoesNotExist):
+    pass
+
+
 class BookAlreadyCreated(Exception):
     def __init__(self, book_title: str, msg=None, *args, **kwargs):
         super().__init__(*args, **kwargs)

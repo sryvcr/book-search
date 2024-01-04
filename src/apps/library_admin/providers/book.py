@@ -1,6 +1,7 @@
 from django.db.models import Q, QuerySet
 
 from apps.library_admin.dataclasses import BookDataclass
+from apps.library_admin.exceptions import BookDoesNotExist
 from apps.library_admin.models import Book
 
 
@@ -32,3 +33,11 @@ def create_book(book: Book | BookDataclass) -> Book:
         description=book.description,
         image=book.image,
     )
+
+
+def delete_book(book_id: int) -> bool:
+    try:
+        Book.objects.get(id=book_id).delete()
+        return True
+    except Book.DoesNotExist:
+        raise BookDoesNotExist()

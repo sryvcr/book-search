@@ -3,8 +3,10 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.library_admin.exceptions import BookAlreadyCreated
-from apps.library_admin.responses.error import BookAlreadyExistsResponse
+from apps.library_admin.exceptions import BookAlreadyCreated, BookDoesNotExist
+from apps.library_admin.responses.error import (
+    BookAlreadyExistsResponse, BookDoesNotExistResponse
+)
 from apps.library_admin.services import book as book_services
 from apps.library_admin.services import third_party_book_apis as book_apis_services
 from apps.library_admin.serializers import BookSerializer
@@ -42,3 +44,12 @@ class BookAPIView(APIView):
         serializer = BookSerializer(book)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class BookDetailAPIView(APIView):
+    def delete(self, request: Request, pk: int) -> Response:
+        try:
+            book_services.delete_book(book_id=pk)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except BookDoesNotExist:
+            return BookDoesNotExistResponse()

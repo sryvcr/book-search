@@ -24,3 +24,15 @@ class BookAlreadyExistsResponse(BaseErrorResponse):
         }
 
         super(BaseErrorResponse, self).__init__(data=data, status=self.status_code)
+
+
+class BookDoesNotExistResponse(BaseErrorResponse):
+    status_code = status.HTTP_400_BAD_REQUEST
+
+    def __init__(self, error_msg: str = "BOOK_DOES_NOT_EXIST_ERROR"):
+        self.error = error_msg
+        data = {
+            "error": self.error,
+        }
+
+        super(BaseErrorResponse, self).__init__(data=data, status=self.status_code)

@@ -11,7 +11,7 @@ from apps.library_admin.services import (
     third_party_book_apis as third_party_book_apis_service
 )
 from apps.library_admin.exceptions import (
-    BookAlreadyCreated, AuthorDoesNotExist, CategoryDoesNotExist
+    BookAlreadyCreated, BookDoesNotExist, AuthorDoesNotExist, CategoryDoesNotExist
 )
 
 
@@ -118,3 +118,10 @@ def __validate_and_return_correct_publication_date_format(publication_date: str)
         return datetime.strptime(publication_date, PUBLICATION_DATE_FORMAT)
     except ValueError:
         return datetime.strptime(DEFAULT_PUBLICATION_DATE, PUBLICATION_DATE_FORMAT)
+
+
+def delete_book(book_id: int) -> bool:
+    try:
+        return book_providers.delete_book(book_id=book_id)
+    except BookDoesNotExist as err:
+        raise err
