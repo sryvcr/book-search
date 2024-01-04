@@ -3,6 +3,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.library_admin.exceptions import BookAlreadyCreated
 from apps.library_admin.services import book as book_services
 from apps.library_admin.services import third_party_book_apis as book_apis_services
 from apps.library_admin.serializers import BookSerializer
@@ -25,3 +26,18 @@ class BookAPIView(APIView):
         books_serializer = BookSerializer(books, many=True)
 
         return Response(books_serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request: Request) -> Response:
+        book_id = request.data.get("id")
+        source = request.data.get("source")
+
+        try:
+            book = book_services.create_book_from_external_source(
+                book_id=book_id, source=source
+            )
+        except BookAlreadyCreated as err:
+            return Response(str(err), status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = BookSerializer(book)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -78,3 +78,11 @@ def __build_book_dataclass_from_google_books_api_data(
             source=library_admin_constants.GOOGLE_BOOKS_API_SOURCE,
         )
     )
+
+
+def get_book_from_google_api_by_id(book_id: str) -> BookDataclass:
+    book_data = get_json_response_from_get_request(
+        url=f"{GOOGLE_BOOK_API_BASE_URL}/{book_id}", params={}
+    )
+
+    return __build_book_dataclass_from_google_books_api_data(book_data=book_data)

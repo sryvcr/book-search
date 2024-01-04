@@ -1,5 +1,6 @@
 from django.db.models import Q, QuerySet
 
+from apps.library_admin.dataclasses import BookDataclass
 from apps.library_admin.models import Book
 
 
@@ -16,3 +17,18 @@ def get_books_by_search_parameter(search: str) -> QuerySet:
         | Q(publication_date__icontains=search)
         | Q(editor__icontains=search)
     ).distinct()
+
+
+def check_if_book_exists_by_title(book_title: str) -> bool:
+    return Book.objects.filter(title=book_title).exists()
+
+
+def create_book(book: Book | BookDataclass) -> Book:
+    return Book.objects.create(
+        title=book.title,
+        subtitle=book.subtitle,
+        publication_date=book.publication_date,
+        editor=book.editor,
+        description=book.description,
+        image=book.image,
+    )
