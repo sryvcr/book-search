@@ -20,3 +20,11 @@ class Book(models.Model):
     editor = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(null=False)
     image = models.CharField(blank=True, null=True)
+
+    @property
+    def authors(self):
+        return self.author.all()
+
+    @property
+    def categories(self):
+        return self.category.all()
