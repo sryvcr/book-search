@@ -19,6 +19,7 @@ services:
     environment:
       - RUNTYPE=bash
       - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=library.settings
 
   migration:
     container_name: library-migration
