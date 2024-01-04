@@ -47,3 +47,12 @@ class TestGetAuthorByAuthorName:
         FAKE_AUTHOR_NAME = "Fake Author Name"
         with pytest.raises(expected_exception=AuthorDoesNotExist):
             author_providers.get_author_by_author_name(author_name=FAKE_AUTHOR_NAME)
+
+
+@pytest.mark.django_db
+def test_create_author():
+    AUTHOR_NAME = "Author Name"
+    result = author_providers.create_author(name=AUTHOR_NAME)
+
+    assert isinstance(result, Author)
+    assert result.name == AUTHOR_NAME
