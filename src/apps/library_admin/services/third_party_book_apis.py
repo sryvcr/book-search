@@ -11,7 +11,7 @@ def get_book_from_google_api_by_search_parameter(search: str) -> list[BookDatacl
     books = []
 
     json_response = get_json_response_from_get_request(
-        url=f"{GOOGLE_BOOK_API_BASE_URL}?q={search}"
+        url=GOOGLE_BOOK_API_BASE_URL, params={"q": search}
     )
 
     if "items" in json_response:

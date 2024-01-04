@@ -45,6 +45,6 @@ def build_dataclass_from_dict(klass: Type[T], data: dict, **kwargs) -> T:
     return klass(**_kwargs)
 
 
-def get_json_response_from_get_request(url: str) -> dict:
-    response = requests.get(url=url)
+def get_json_response_from_get_request(url: str, params: dict) -> dict:
+    response = requests.get(url=url, params=params)
     return response.json()
