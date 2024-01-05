@@ -6,6 +6,7 @@ from apps.library_admin.models import Author
 from apps.library_admin.providers import author as author_providers
 from apps.library_admin.tests.recipes import (
     author_alex_xu,
+    author_sahn_lam,
     book_system_design_interview,
 )
 
@@ -14,6 +15,11 @@ from apps.library_admin.tests.recipes import (
 class TestGetBookAuthorNamesByBookId:
     def setup_method(self):
         self.book = book_system_design_interview.make()
+        self.author_1 = author_alex_xu.make()
+        self.author_2 = author_sahn_lam.make()
+
+        self.book.author.add(self.author_1)
+        self.book.author.add(self.author_2)
 
     def test_get_book_authors(self):
         result = author_providers.get_book_author_names_by_book_id(book_id=self.book.id)

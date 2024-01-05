@@ -4,8 +4,9 @@ from apps.library_admin.exceptions import CategoryDoesNotExist
 from apps.library_admin.models import Category
 from apps.library_admin.providers import category as category_providers
 from apps.library_admin.tests.recipes import (
-    category_web_development,
     book_system_design_interview,
+    category_computer,
+    category_web_development,
 )
 
 
@@ -13,6 +14,11 @@ from apps.library_admin.tests.recipes import (
 class TestGetBookCategoryNamesByBookId:
     def setup_method(self):
         self.book = book_system_design_interview.make()
+        self.category_1 = category_computer.make()
+        self.category_2 = category_web_development.make()
+
+        self.book.category.add(self.category_1)
+        self.book.category.add(self.category_2)
 
     def test_get_book_categories(self):
         result = category_providers.get_book_category_names_by_book_id(
