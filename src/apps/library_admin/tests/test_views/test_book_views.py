@@ -171,3 +171,27 @@ class TestBookAPIView:
         response = api_client.post(self.url, payload)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.django_db
+class TestBookDetailAPIView:
+    def setup_method(self):
+        self.author = author_robert_martin.make()
+
+        self.category = category_web_development.make()
+
+        self.book = book_clean_architecture.make()
+        self.book.author.add(self.author)
+        self.book.category.add(self.category)
+
+    def test_delete_book(self, api_client):
+        URL = reverse("book_details_api_v1", kwargs={"pk": self.book.id})
+        response = api_client.delete(URL)
+
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    def test_delete__book_does_not_exists(self, api_client):
+        URL = reverse("book_details_api_v1", kwargs={"pk": 987654321})
+        response = api_client.delete(URL)
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
