@@ -94,3 +94,21 @@ class TestGetBooksBySearchParameter:
         assert len(result) == 1
         assert isinstance(result[0], Book)
         assert result[0].title == self.book_1.title
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    ["book_title", "exists"],
+    [
+        ("Clean Architecture", True),
+        ("Fake Title", False),
+    ]
+)
+def test_check_if_book_exists_by_title(exists, book_title):
+    book_clean_architecture.make()
+
+    result = book_providers.check_if_book_exists_by_title(
+        book_title=book_title
+    )
+
+    assert result == exists
