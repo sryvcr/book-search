@@ -2,7 +2,9 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from apps.library_admin.constants import INTERNAL_SOURCE
+from apps.library_admin.constants import (
+    GOOGLE_BOOKS_API_SOURCE, INTERNAL_SOURCE
+)
 from apps.library_admin.tests.recipes import (
     author_alex_xu,
     author_sahn_lam,
@@ -147,3 +149,25 @@ class TestBookAPIView:
         assert response.status_code == status.HTTP_200_OK
         assert len(response_json) == 1
         assert response_json[0]["title"] == self.book_1.title
+
+    def test_post__create_book_from_google_api(self, api_client):
+        GOOGLE_BOOK_ID = "_i6bDeoCQzsC"
+        payload = {
+            "id": GOOGLE_BOOK_ID,
+            "source": GOOGLE_BOOKS_API_SOURCE
+        }
+
+        response = api_client.post(self.url, payload)
+
+        assert response.status_code == status.HTTP_201_CREATED
+
+    def test_post__book_already_exists(self, api_client):
+        GOOGLE_BOOK_ID = "uGE1DwAAQBAJ"
+        payload = {
+            "id": GOOGLE_BOOK_ID,
+            "source": GOOGLE_BOOKS_API_SOURCE
+        }
+
+        response = api_client.post(self.url, payload)
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
