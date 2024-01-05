@@ -5,7 +5,9 @@ from apps.library_admin.exceptions import AuthorDoesNotExist
 
 
 def get_book_author_names_by_book_id(book_id: int) -> QuerySet:
-    return Author.objects.filter(book__id=book_id).values_list("name", flat=True)
+    return Author.objects.filter(
+        book__id=book_id
+    ).order_by("name").values_list("name", flat=True)
 
 
 def get_author_by_author_name(author_name: str) -> bool:
