@@ -2,6 +2,7 @@ import pytest
 
 from apps.library_admin.constants import INTERNAL_SOURCE
 from apps.library_admin.dataclasses import BookDataclass
+from apps.library_admin.exceptions import BookDoesNotExist
 from apps.library_admin.services import book as book_services
 from apps.library_admin.tests.recipes import (
     author_alex_xu,
@@ -101,3 +102,19 @@ class TestGetBooksBySearchParameter:
         assert len(result) == 1
         assert isinstance(result[0], BookDataclass)
         assert result[0].title == self.book_1.title
+
+
+@pytest.mark.django_db
+class TestDeleteBook:
+    def setup_method(self):
+        self.book = book_system_design_interview.make()
+
+    def test_delete_book(self):
+        result = book_services.delete_book(book_id=self.book.id)
+
+        assert result is True
+
+    def test_delete_book__does_not_exist_exception(self):
+        with pytest.raises(BookDoesNotExist):
+            FAKE_BOOK_ID = 9876543210
+            book_services.delete_book(book_id=FAKE_BOOK_ID)
