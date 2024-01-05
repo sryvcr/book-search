@@ -4,9 +4,15 @@ from django.db import models
 class Author(models.Model):
     name = models.CharField(max_length=150, unique=True, blank=False, null=False)
 
+    def __str__(self):
+        return f"{self.pk} - {self.name}"
+
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True, blank=False, null=False)
+
+    def __str__(self):
+        return f"{self.pk} - {self.name}"
 
 
 class Book(models.Model):
@@ -28,3 +34,6 @@ class Book(models.Model):
     @property
     def categories(self):
         return self.category.all()
+
+    def __str__(self):
+        return f"{self.pk} - {self.title}"
