@@ -53,62 +53,66 @@ def create_book_from_external_source(book_id: str, source: str) -> BookDataclass
             book = third_party_book_apis_service.get_book_from_google_api_by_id(
                 book_id=book_id
             )
+            if book:
+                try:
+                    return create_book_from_google_book_api(book=book)
+                except BookAlreadyCreated as err:
+                    raise err
         case _:
-            book = None
+            return None
 
-    if book:
-        if not book_providers.check_if_book_exists_by_title(book_title=book.title):
-            authors = []
-            categories = []
 
-            with transaction.atomic():
-                for author in book.authors:
-                    try:
-                        author = author_providers.get_author_by_author_name(
-                            author_name=author
-                        )
-                        authors.append(author)
-                    except AuthorDoesNotExist:
-                        author = author_providers.create_author(name=author)
-                        authors.append(author)
+def create_book_from_google_book_api(book: BookDataclass) -> BookDataclass:
+    if not book_providers.check_if_book_exists_by_title(book_title=book.title):
+        authors = []
+        categories = []
 
-                for category in book.categories:
-                    try:
-                        category = category_providers.get_category_by_category_name(
-                            author_name=author
-                        )
-                        categories.append(category)
-                    except CategoryDoesNotExist:
-                        category = category_providers.create_category(name=category)
-                        categories.append(category)
+        with transaction.atomic():
+            for author in book.authors:
+                try:
+                    author = author_providers.get_author_by_author_name(
+                        author_name=author
+                    )
+                    authors.append(author)
+                except AuthorDoesNotExist:
+                    author = author_providers.create_author(name=author)
+                    authors.append(author)
 
-                book.publication_date = __validate_and_return_correct_publication_date_format(
-                    publication_date=book.publication_date
-                )
+            for category in book.categories:
+                try:
+                    category = category_providers.get_category_by_category_name(
+                        author_name=author
+                    )
+                    categories.append(category)
+                except CategoryDoesNotExist:
+                    category = category_providers.create_category(name=category)
+                    categories.append(category)
 
-                new_book = book_providers.create_book(book=book)
-
-                if authors:
-                    new_book.author.set(authors)
-
-                if categories:
-                    new_book.category.set(categories)
-
-            return build_dataclass_from_model_instance(
-                klass=BookDataclass,
-                instance=new_book,
-                authors=author_providers.get_book_author_names_by_book_id(
-                    book_id=new_book.id
-                ),
-                categories=category_providers.get_book_category_names_by_book_id(
-                    book_id=new_book.id
-                ),
-                source=library_admin_constants.INTERNAL_SOURCE,
+            book.publication_date = __validate_and_return_correct_publication_date_format(
+                publication_date=book.publication_date
             )
-        else:
-            raise BookAlreadyCreated(book_title=book.title)
 
-    return None
+            new_book = book_providers.create_book(book=book)
+
+            if authors:
+                new_book.author.set(authors)
+
+            if categories:
+                new_book.category.set(categories)
+
+        return build_dataclass_from_model_instance(
+            klass=BookDataclass,
+            instance=new_book,
+            authors=author_providers.get_book_author_names_by_book_id(
+                book_id=new_book.id
+            ),
+            categories=category_providers.get_book_category_names_by_book_id(
+                book_id=new_book.id
+            ),
+            source=library_admin_constants.INTERNAL_SOURCE,
+        )
+    else:
+        raise BookAlreadyCreated(book_title=book.title)
 
 
 def __validate_and_return_correct_publication_date_format(publication_date: str):
