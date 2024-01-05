@@ -11,6 +11,16 @@ author_sahn_lam = Recipe(
     name="Sahn Lam",
 )
 
+author_robert_martin = Recipe(
+    "library_admin.Author",
+    name="Robert C. Martin",
+)
+
+category_custom = Recipe(
+    "library_admin.Category",
+    name="Category Custom",
+)
+
 category_computer = Recipe(
     "library_admin.Category",
     name="Computer",
@@ -19,6 +29,16 @@ category_computer = Recipe(
 category_web_development = Recipe(
     "library_admin.Category",
     name="Web Development",
+)
+
+book_custom = Recipe(
+    "library_admin.Book",
+    title="Book Custom",
+    subtitle="Book Custom Subtitle",
+    publication_date="1800-01-01",
+    editor="Custom Editor",
+    description="Custom book description",
+    image="",
 )
 
 book_system_design_interview = Recipe(
