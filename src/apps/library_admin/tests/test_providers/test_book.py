@@ -1,5 +1,6 @@
 import pytest
 
+from apps.library_admin.exceptions import BookDoesNotExist
 from apps.library_admin.models import Book
 from apps.library_admin.dataclasses import BookDataclass
 from apps.library_admin.providers import book as book_providers
@@ -139,3 +140,19 @@ def test_create_book():
     assert result.editor == book_dataclass.editor
     assert result.description == book_dataclass.description
     assert result.image == book_dataclass.image
+
+
+@pytest.mark.django_db
+class TestDeleteBook:
+    def setup_method(self):
+        self.book = book_system_design_interview.make()
+
+    def test_delete_book(self):
+        result = book_providers.delete_book(book_id=self.book.id)
+
+        assert result is True
+
+    def test_delete_book__does_not_exist_exception(self):
+        with pytest.raises(BookDoesNotExist):
+            FAKE_BOOK_ID = 9876543210
+            book_providers.delete_book(book_id=FAKE_BOOK_ID)
