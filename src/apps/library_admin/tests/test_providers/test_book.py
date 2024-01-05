@@ -1,6 +1,7 @@
 import pytest
 
 from apps.library_admin.models import Book
+from apps.library_admin.dataclasses import BookDataclass
 from apps.library_admin.providers import book as book_providers
 from apps.library_admin.tests.recipes import (
     author_alex_xu,
@@ -112,3 +113,29 @@ def test_check_if_book_exists_by_title(exists, book_title):
     )
 
     assert result == exists
+
+
+@pytest.mark.django_db
+def test_create_book():
+    book_dataclass = BookDataclass(
+        id=1,
+        title="Book Test",
+        subtitle="Book Test Subtitle",
+        authors=[],
+        categories=[],
+        publication_date="2023-12-31",
+        editor="Editor Test",
+        description="Book Test description",
+        image="",
+        source="",
+    )
+
+    result = book_providers.create_book(book=book_dataclass)
+
+    assert isinstance(result, Book)
+    assert result.title == book_dataclass.title
+    assert result.subtitle == book_dataclass.subtitle
+    assert result.publication_date == book_dataclass.publication_date
+    assert result.editor == book_dataclass.editor
+    assert result.description == book_dataclass.description
+    assert result.image == book_dataclass.image
