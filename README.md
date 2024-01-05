@@ -36,3 +36,5 @@ To run tests execute:
 ```bash
 $ make test
 ```
+
+**NOTE**: You can find a postman collection file inside the project, this file contains all the requests urls and their example of different responses
