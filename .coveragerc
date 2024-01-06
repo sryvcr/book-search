@@ -1,0 +1,12 @@
+[run]
+branch = True
+
+source = src/apps/
+
+omit =
+    */migrations/*
+    */tests/*
+    */test/*
+    */tests.py
+
+parallel = True
