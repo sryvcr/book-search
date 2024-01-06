@@ -1,0 +1,27 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.2.3
+    hooks:
+    -   id: trailing-whitespace
+        name: trim trailing whitespace
+        files: (.*\.py$)
+        exclude: (^.*\/migrations\/.*\.py$)
+    -   id: end-of-file-fixer
+        name: end of line fixer
+        files: (.*\.py$)
+        exclude: (^.*\/migrations\/.*\.py$)
+    -   id: check-merge-conflict
+        name: check merge conflicts
+-   repo: https://github.com/python/black
+    rev: '23.3.0'
+    hooks:
+    -   id: black
+        additional_dependencies:
+            - click<8.1.0
+        files: (?x)^.*\/.*\.pyi?$
+        exclude: >
+            (?x)^(.*\/migrations\/.*\.py)$
+        language: python
+        language_version: python3.10
