@@ -1,2 +1,7 @@
-*.pyc
+# Byte-compiled
 *__pycache__/
+*.pyc
+
+# test coverage reports
+htmlcov/
+.coverage
