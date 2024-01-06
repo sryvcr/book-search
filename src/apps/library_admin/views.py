@@ -24,6 +24,8 @@ class BookAPIView(APIView):
         if not books:
             books = book_apis_services.get_book_from_google_api_by_search_parameter(
                 search=search
+            ) or book_apis_services.get_books_from_open_library_by_search_parameter(
+                search=search
             )
 
         books_serializer = BookSerializer(books, many=True)
