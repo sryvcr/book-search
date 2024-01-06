@@ -2,9 +2,7 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from apps.library_admin.constants import (
-    GOOGLE_BOOKS_API_SOURCE, INTERNAL_SOURCE
-)
+from apps.library_admin.constants import GOOGLE_BOOKS_API_SOURCE, INTERNAL_SOURCE
 from apps.library_admin.tests.recipes import (
     author_alex_xu,
     author_sahn_lam,
@@ -47,9 +45,7 @@ class TestBookAPIView:
 
     def test_get__search_internal_books_by_title(self, api_client):
         SEARCH_BY_TITLE = "Architecture"
-        query_params = {
-            "search": SEARCH_BY_TITLE
-        }
+        query_params = {"search": SEARCH_BY_TITLE}
 
         response = api_client.get(self.url, query_params)
         response_json = response.json()
@@ -68,9 +64,7 @@ class TestBookAPIView:
 
     def test_get__search_internal_books_by_subtitle(self, api_client):
         SEARCH_BY_SUBTITLE = "An Insider's"
-        query_params = {
-            "search": SEARCH_BY_SUBTITLE
-        }
+        query_params = {"search": SEARCH_BY_SUBTITLE}
 
         response = api_client.get(self.url, query_params)
         response_json = response.json()
@@ -89,9 +83,7 @@ class TestBookAPIView:
 
     def test_get__search_internal_books_by_author(self, api_client):
         SEARCH_BY_AUTHOR = "Alex"
-        query_params = {
-            "search": SEARCH_BY_AUTHOR
-        }
+        query_params = {"search": SEARCH_BY_AUTHOR}
 
         response = api_client.get(self.url, query_params)
         response_json = response.json()
@@ -110,9 +102,7 @@ class TestBookAPIView:
 
     def test_get__search_internal_books_by_category(self, api_client):
         SEARCH_BY_AUTHOR = "Web"
-        query_params = {
-            "search": SEARCH_BY_AUTHOR
-        }
+        query_params = {"search": SEARCH_BY_AUTHOR}
 
         response = api_client.get(self.url, query_params)
         response_json = response.json()
@@ -120,15 +110,11 @@ class TestBookAPIView:
         assert response.status_code == status.HTTP_200_OK
         assert len(response_json) == 2
 
-    @pytest.mark.parametrize(
-        "publication_date", ["2017-09-10", "2017-09", "2017-09"]
-    )
+    @pytest.mark.parametrize("publication_date", ["2017-09-10", "2017-09", "2017-09"])
     def test_get__search_internal_books_by_publication_date(
         self, api_client, publication_date
     ):
-        query_params = {
-            "search": publication_date
-        }
+        query_params = {"search": publication_date}
 
         response = api_client.get(self.url, query_params)
         response_json = response.json()
@@ -139,9 +125,7 @@ class TestBookAPIView:
 
     def test_get__search_internal_books_by_editor(self, api_client):
         SEARCH_BY_EDITOR = "Byte"
-        query_params = {
-            "search": SEARCH_BY_EDITOR
-        }
+        query_params = {"search": SEARCH_BY_EDITOR}
 
         response = api_client.get(self.url, query_params)
         response_json = response.json()
@@ -152,10 +136,7 @@ class TestBookAPIView:
 
     def test_post__create_book_from_google_api(self, api_client):
         GOOGLE_BOOK_ID = "_i6bDeoCQzsC"
-        payload = {
-            "id": GOOGLE_BOOK_ID,
-            "source": GOOGLE_BOOKS_API_SOURCE
-        }
+        payload = {"id": GOOGLE_BOOK_ID, "source": GOOGLE_BOOKS_API_SOURCE}
 
         response = api_client.post(self.url, payload)
 
@@ -163,10 +144,7 @@ class TestBookAPIView:
 
     def test_post__book_already_exists(self, api_client):
         GOOGLE_BOOK_ID = "uGE1DwAAQBAJ"
-        payload = {
-            "id": GOOGLE_BOOK_ID,
-            "source": GOOGLE_BOOKS_API_SOURCE
-        }
+        payload = {"id": GOOGLE_BOOK_ID, "source": GOOGLE_BOOKS_API_SOURCE}
 
         response = api_client.post(self.url, payload)
 

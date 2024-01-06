@@ -93,9 +93,7 @@ class TestGetBooksBySearchParameter:
         assert isinstance(result[0], BookDataclass)
         assert isinstance(result[1], BookDataclass)
 
-    @pytest.mark.parametrize(
-        "publication_date", ["2020-02-12", "2020-02", "2020"]
-    )
+    @pytest.mark.parametrize("publication_date", ["2020-02-12", "2020-02", "2020"])
     def test_get_books_by_publication_date(self, publication_date):
         result = book_services.get_books_by_search_parameter(search=publication_date)
 

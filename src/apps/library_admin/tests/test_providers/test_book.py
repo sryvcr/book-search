@@ -87,9 +87,7 @@ class TestGetBooksBySearchParameter:
         assert isinstance(result[0], Book)
         assert isinstance(result[1], Book)
 
-    @pytest.mark.parametrize(
-        "publication_date", ["2020-02-12", "2020-02", "2020"]
-    )
+    @pytest.mark.parametrize("publication_date", ["2020-02-12", "2020-02", "2020"])
     def test_get_books_by_publication_date(self, publication_date):
         result = book_providers.get_books_by_search_parameter(search=publication_date)
 
@@ -104,14 +102,12 @@ class TestGetBooksBySearchParameter:
     [
         ("Clean Architecture", True),
         ("Fake Title", False),
-    ]
+    ],
 )
 def test_check_if_book_exists_by_title(exists, book_title):
     book_clean_architecture.make()
 
-    result = book_providers.check_if_book_exists_by_title(
-        book_title=book_title
-    )
+    result = book_providers.check_if_book_exists_by_title(book_title=book_title)
 
     assert result == exists
 

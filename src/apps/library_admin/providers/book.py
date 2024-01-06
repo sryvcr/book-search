@@ -10,14 +10,18 @@ def get_books() -> QuerySet:
 
 
 def get_books_by_search_parameter(search: str) -> QuerySet:
-    return Book.objects.filter(
-        Q(title__icontains=search)
-        | Q(subtitle__icontains=search)
-        | Q(author__name__icontains=search)
-        | Q(category__name__icontains=search)
-        | Q(publication_date__icontains=search)
-        | Q(editor__icontains=search)
-    ).distinct().order_by("title")
+    return (
+        Book.objects.filter(
+            Q(title__icontains=search)
+            | Q(subtitle__icontains=search)
+            | Q(author__name__icontains=search)
+            | Q(category__name__icontains=search)
+            | Q(publication_date__icontains=search)
+            | Q(editor__icontains=search)
+        )
+        .distinct()
+        .order_by("title")
+    )
 
 
 def check_if_book_exists_by_title(book_title: str) -> bool:

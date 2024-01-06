@@ -8,10 +8,13 @@ from apps.library_admin.providers import author as author_providers
 from apps.library_admin.providers import book as book_providers
 from apps.library_admin.providers import category as category_providers
 from apps.library_admin.services import (
-    third_party_book_apis as third_party_book_apis_service
+    third_party_book_apis as third_party_book_apis_service,
 )
 from apps.library_admin.exceptions import (
-    BookAlreadyCreated, BookDoesNotExist, AuthorDoesNotExist, CategoryDoesNotExist
+    BookAlreadyCreated,
+    BookDoesNotExist,
+    AuthorDoesNotExist,
+    CategoryDoesNotExist,
 )
 
 
@@ -27,7 +30,8 @@ def get_books() -> list[BookDataclass]:
                 book_id=book.id
             ),
             source=library_admin_constants.INTERNAL_SOURCE,
-        ) for book in books
+        )
+        for book in books
     ]
 
 
@@ -43,7 +47,8 @@ def get_books_by_search_parameter(search: str) -> list[BookDataclass]:
                 book_id=book.id
             ),
             source=library_admin_constants.INTERNAL_SOURCE,
-        ) for book in books
+        )
+        for book in books
     ]
 
 
@@ -88,8 +93,10 @@ def create_book_from_google_book_api(book: BookDataclass) -> BookDataclass:
                     category = category_providers.create_category(name=category)
                     categories.append(category)
 
-            book.publication_date = __validate_and_return_correct_publication_date_format(
-                publication_date=book.publication_date
+            book.publication_date = (
+                __validate_and_return_correct_publication_date_format(
+                    publication_date=book.publication_date
+                )
             )
 
             new_book = book_providers.create_book(book=book)

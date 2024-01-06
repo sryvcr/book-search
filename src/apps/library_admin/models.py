@@ -19,9 +19,7 @@ class Book(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     subtitle = models.CharField(max_length=200, blank=False, null=False)
     author = models.ManyToManyField(Author, related_name="book", db_index=False)
-    category = models.ManyToManyField(
-        Category, related_name="book", db_index=False
-    )
+    category = models.ManyToManyField(Category, related_name="book", db_index=False)
     publication_date = models.DateField(blank=False, null=False)
     editor = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(null=False)

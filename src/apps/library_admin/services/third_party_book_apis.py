@@ -23,9 +23,7 @@ def get_book_from_google_api_by_search_parameter(search: str) -> list[BookDatacl
     return books
 
 
-def __build_book_dataclass_from_google_books_api_data(
-    book_data: dict
-) -> BookDataclass:
+def __build_book_dataclass_from_google_books_api_data(book_data: dict) -> BookDataclass:
     title = book_data["volumeInfo"]["title"]
 
     try:
@@ -63,20 +61,18 @@ def __build_book_dataclass_from_google_books_api_data(
     except KeyError:
         image = ""
 
-    return (
-        build_dataclass_from_dict(
-            klass=BookDataclass,
-            data=book_data,
-            title=title,
-            subtitle=subtitle,
-            authors=authors,
-            categories=categories,
-            publication_date=publication_date,
-            editor=editor,
-            description=description,
-            image=image,
-            source=library_admin_constants.GOOGLE_BOOKS_API_SOURCE,
-        )
+    return build_dataclass_from_dict(
+        klass=BookDataclass,
+        data=book_data,
+        title=title,
+        subtitle=subtitle,
+        authors=authors,
+        categories=categories,
+        publication_date=publication_date,
+        editor=editor,
+        description=description,
+        image=image,
+        source=library_admin_constants.GOOGLE_BOOKS_API_SOURCE,
     )
 
 
@@ -95,7 +91,7 @@ def get_books_from_open_library_by_search_parameter(search: str) -> list[BookDat
         url=OPEN_LIBRARY_API_BASE_URL,
         params={
             "q": search,
-            "fields": "key,title,subtitle,author_name,subject,publisher,publish_date"
+            "fields": "key,title,subtitle,author_name,subject,publisher,publish_date",
         },
         verify=False,
     )
@@ -109,9 +105,7 @@ def get_books_from_open_library_by_search_parameter(search: str) -> list[BookDat
     return books
 
 
-def __build_book_dataclass_from_open_library_api_data(
-    book_data: dict
-) -> BookDataclass:
+def __build_book_dataclass_from_open_library_api_data(book_data: dict) -> BookDataclass:
     id = book_data["key"]
     title = book_data["title"]
 
@@ -144,19 +138,17 @@ def __build_book_dataclass_from_open_library_api_data(
 
     image = ""
 
-    return (
-        build_dataclass_from_dict(
-            klass=BookDataclass,
-            data=book_data,
-            id=id,
-            title=title,
-            subtitle=subtitle,
-            authors=authors,
-            categories=categories,
-            publication_date=publication_date,
-            editor=editor,
-            description=description,
-            image=image,
-            source=library_admin_constants.OPEN_LIBRARY_API_SOURCE,
-        )
+    return build_dataclass_from_dict(
+        klass=BookDataclass,
+        data=book_data,
+        id=id,
+        title=title,
+        subtitle=subtitle,
+        authors=authors,
+        categories=categories,
+        publication_date=publication_date,
+        editor=editor,
+        description=description,
+        image=image,
+        source=library_admin_constants.OPEN_LIBRARY_API_SOURCE,
     )
