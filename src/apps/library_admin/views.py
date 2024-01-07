@@ -1,7 +1,8 @@
+import asyncio
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from adrf.views import APIView
 
 from apps.library_admin.exceptions import BookAlreadyCreated, BookDoesNotExist
 from apps.library_admin.responses.error import (
@@ -50,9 +51,9 @@ class BookAPIView(APIView):
 
 
 class BookDetailAPIView(APIView):
-    def delete(self, request: Request, pk: int) -> Response:
+    async def delete(self, request: Request, pk: int) -> Response:
         try:
-            book_services.delete_book(book_id=pk)
+            await asyncio.gather(book_services.delete_book(book_id=pk))
             return Response(status=status.HTTP_204_NO_CONTENT)
         except BookDoesNotExist:
             return BookDoesNotExistResponse()

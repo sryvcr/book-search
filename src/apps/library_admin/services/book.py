@@ -131,8 +131,8 @@ def __validate_and_return_correct_publication_date_format(publication_date: str)
         return datetime.strptime(DEFAULT_PUBLICATION_DATE, PUBLICATION_DATE_FORMAT)
 
 
-def delete_book(book_id: int) -> bool:
+async def delete_book(book_id: int) -> bool:
     try:
-        return book_providers.delete_book(book_id=book_id)
+        return await book_providers.delete_book(book_id=book_id)
     except BookDoesNotExist as err:
         raise err

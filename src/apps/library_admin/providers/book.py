@@ -1,3 +1,4 @@
+from asgiref.sync import sync_to_async
 from django.db.models import Q, QuerySet
 
 from apps.library_admin.dataclasses import BookDataclass
@@ -39,6 +40,7 @@ def create_book(book: Book | BookDataclass) -> Book:
     )
 
 
+@sync_to_async
 def delete_book(book_id: int) -> bool:
     try:
         Book.objects.get(id=book_id).delete()
