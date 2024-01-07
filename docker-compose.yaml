@@ -6,7 +6,7 @@ services:
     container_name: library-svc
     image: library-svc
     build: .
-    entrypoint: python /app/src/manage.py runserver 0.0.0.0:8000
+    entrypoint: python -m uvicorn library.asgi:application --host 0.0.0.0 --port 8000 --app-dir /app/src --reload
     ports:
       - "8000:8000"
     networks:
