@@ -1,4 +1,5 @@
 import pytest
+from asgiref.sync import async_to_sync
 
 from apps.library_admin.exceptions import BookDoesNotExist
 from apps.library_admin.models import Book
@@ -20,7 +21,7 @@ def test_get_books():
     book_1 = book_system_design_interview.make()
     book_2 = book_clean_architecture.make()
 
-    result = book_providers.get_books()
+    result = async_to_sync(book_providers.get_books)()
 
     assert len(result) == 2
     assert isinstance(result[0], Book)
@@ -50,7 +51,9 @@ class TestGetBooksBySearchParameter:
 
     def test_get_books_by_title(self):
         SEARCH_BY_TITLE = "System"
-        result = book_providers.get_books_by_search_parameter(search=SEARCH_BY_TITLE)
+        result = async_to_sync(book_providers.get_books_by_search_parameter)(
+            search=SEARCH_BY_TITLE
+        )
 
         assert len(result) == 1
         assert isinstance(result[0], Book)
@@ -60,7 +63,9 @@ class TestGetBooksBySearchParameter:
 
     def test_get_books_by_subtitle(self):
         SEARCH_BY_SUBTITLE = "A Craftsman's Guide"
-        result = book_providers.get_books_by_search_parameter(search=SEARCH_BY_SUBTITLE)
+        result = async_to_sync(book_providers.get_books_by_search_parameter)(
+            search=SEARCH_BY_SUBTITLE
+        )
 
         assert len(result) == 1
         assert isinstance(result[0], Book)
@@ -71,7 +76,9 @@ class TestGetBooksBySearchParameter:
 
     def test_get_books_by_author(self):
         SEARCH_BY_AUTHOR = "Alex"
-        result = book_providers.get_books_by_search_parameter(search=SEARCH_BY_AUTHOR)
+        result = async_to_sync(book_providers.get_books_by_search_parameter)(
+            search=SEARCH_BY_AUTHOR
+        )
 
         assert len(result) == 1
         assert isinstance(result[0], Book)
@@ -81,7 +88,9 @@ class TestGetBooksBySearchParameter:
 
     def test_get_books_by_category(self):
         SEARCH_BY_CATEGORY = "Web"
-        result = book_providers.get_books_by_search_parameter(search=SEARCH_BY_CATEGORY)
+        result = async_to_sync(book_providers.get_books_by_search_parameter)(
+            search=SEARCH_BY_CATEGORY
+        )
 
         assert len(result) == 2
         assert isinstance(result[0], Book)
@@ -89,7 +98,9 @@ class TestGetBooksBySearchParameter:
 
     @pytest.mark.parametrize("publication_date", ["2020-02-12", "2020-02", "2020"])
     def test_get_books_by_publication_date(self, publication_date):
-        result = book_providers.get_books_by_search_parameter(search=publication_date)
+        result = async_to_sync(book_providers.get_books_by_search_parameter)(
+            search=publication_date
+        )
 
         assert len(result) == 1
         assert isinstance(result[0], Book)
