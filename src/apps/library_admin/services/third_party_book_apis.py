@@ -37,7 +37,7 @@ def __build_book_dataclass_from_google_books_api_data(book_data: dict) -> BookDa
         authors = []
 
     try:
-        categories = book_data["categories"]
+        categories = book_data["volumeInfo"]["categories"]
     except KeyError:
         categories = []
 

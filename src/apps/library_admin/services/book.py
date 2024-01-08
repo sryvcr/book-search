@@ -86,7 +86,7 @@ def create_book_from_google_book_api(book: BookDataclass) -> BookDataclass:
             for category in book.categories:
                 try:
                     category = category_providers.get_category_by_category_name(
-                        author_name=author
+                        category_name=category
                     )
                     categories.append(category)
                 except CategoryDoesNotExist:
