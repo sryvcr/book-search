@@ -6,10 +6,12 @@ from apps.library_admin.exceptions import BookDoesNotExist
 from apps.library_admin.models import Book
 
 
+@sync_to_async
 def get_books() -> QuerySet:
     return Book.objects.all().order_by("title")
 
 
+@sync_to_async
 def get_books_by_search_parameter(search: str) -> QuerySet:
     return (
         Book.objects.filter(

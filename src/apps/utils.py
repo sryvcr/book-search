@@ -1,4 +1,5 @@
 import requests
+from asgiref.sync import sync_to_async
 from typing import Type, TypeVar
 from django.db.models import Model
 from dataclasses import fields
@@ -46,6 +47,14 @@ def build_dataclass_from_dict(klass: Type[T], data: dict, **kwargs) -> T:
 
 
 def get_json_response_from_get_request(
+    url: str, params: dict, verify: bool = True
+) -> dict:
+    response = requests.get(url=url, params=params, verify=verify)
+    return response.json()
+
+
+@sync_to_async
+def get_json_response_from_get_request_async(
     url: str, params: dict, verify: bool = True
 ) -> dict:
     response = requests.get(url=url, params=params, verify=verify)

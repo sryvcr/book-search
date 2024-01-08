@@ -4,12 +4,20 @@ import pytest_asyncio
 from asgiref.sync import sync_to_async
 from rest_framework.test import APIClient
 
-from apps.library_admin.tests.recipes import book_system_design_interview
+from apps.library_admin.tests.recipes import (
+    book_clean_architecture,
+    book_system_design_interview,
+)
 
 
 @pytest.fixture
 def api_client():
     return APIClient()
+
+
+@pytest_asyncio.fixture(name="book_clean_architecture_async")
+async def create_book_clean_architecture():
+    return await sync_to_async(book_clean_architecture.make)()
 
 
 @pytest_asyncio.fixture(name="book_system_design_interview_async")

@@ -1,7 +1,8 @@
+from adrf.serializers import Serializer
 from rest_framework import serializers
 
 
-class BookSerializer(serializers.Serializer):
+class BookSerializer(Serializer):
     id = serializers.ReadOnlyField()
     title = serializers.ReadOnlyField()
     subtitle = serializers.ReadOnlyField()

@@ -18,38 +18,50 @@ from apps.library_admin.exceptions import (
 )
 
 
-def get_books() -> list[BookDataclass]:
-    books = book_providers.get_books()
+async def get_books() -> list[BookDataclass]:
+    books = await book_providers.get_books()
 
-    return [
-        build_dataclass_from_model_instance(
+    result = []
+    async for book in books:
+        authors = await author_providers.get_book_author_names_by_book_id(
+            book_id=book.id
+        )
+        categories = await category_providers.get_book_category_names_by_book_id(
+            book_id=book.id
+        )
+        book_dataclass = build_dataclass_from_model_instance(
             klass=BookDataclass,
             instance=book,
-            authors=author_providers.get_book_author_names_by_book_id(book_id=book.id),
-            categories=category_providers.get_book_category_names_by_book_id(
-                book_id=book.id
-            ),
+            authors=authors,
+            categories=categories,
             source=library_admin_constants.INTERNAL_SOURCE,
         )
-        for book in books
-    ]
+        result.append(book_dataclass)
+
+    return result
 
 
-def get_books_by_search_parameter(search: str) -> list[BookDataclass]:
-    books = book_providers.get_books_by_search_parameter(search=search)
+async def get_books_by_search_parameter(search: str) -> list[BookDataclass]:
+    books = await book_providers.get_books_by_search_parameter(search=search)
 
-    return [
-        build_dataclass_from_model_instance(
+    result = []
+    async for book in books:
+        authors = await author_providers.get_book_author_names_by_book_id(
+            book_id=book.id
+        )
+        categories = await category_providers.get_book_category_names_by_book_id(
+            book_id=book.id
+        )
+        book_dataclass = build_dataclass_from_model_instance(
             klass=BookDataclass,
             instance=book,
-            authors=author_providers.get_book_author_names_by_book_id(book_id=book.id),
-            categories=category_providers.get_book_category_names_by_book_id(
-                book_id=book.id
-            ),
+            authors=authors,
+            categories=categories,
             source=library_admin_constants.INTERNAL_SOURCE,
         )
-        for book in books
-    ]
+        result.append(book_dataclass)
+
+    return result
 
 
 def create_book_from_external_source(book_id: str, source: str) -> BookDataclass | None:

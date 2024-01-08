@@ -1,4 +1,8 @@
-from apps.utils import build_dataclass_from_dict, get_json_response_from_get_request
+from apps.utils import (
+    build_dataclass_from_dict,
+    get_json_response_from_get_request,
+    get_json_response_from_get_request_async,
+)
 from apps.library_admin import constants as library_admin_constants
 from apps.library_admin.dataclasses import BookDataclass
 
@@ -7,10 +11,12 @@ GOOGLE_BOOK_API_BASE_URL = "https://www.googleapis.com/books/v1/volumes"
 OPEN_LIBRARY_API_BASE_URL = "https://www.openlibrary.org/search.json"
 
 
-def get_book_from_google_api_by_search_parameter(search: str) -> list[BookDataclass]:
+async def get_book_from_google_api_by_search_parameter(
+    search: str,
+) -> list[BookDataclass]:
     books = []
 
-    json_response = get_json_response_from_get_request(
+    json_response = await get_json_response_from_get_request_async(
         url=GOOGLE_BOOK_API_BASE_URL, params={"q": search}
     )
 
@@ -84,10 +90,12 @@ def get_book_from_google_api_by_id(book_id: str) -> BookDataclass:
     return __build_book_dataclass_from_google_books_api_data(book_data=book_data)
 
 
-def get_books_from_open_library_by_search_parameter(search: str) -> list[BookDataclass]:
+async def get_books_from_open_library_by_search_parameter(
+    search: str,
+) -> list[BookDataclass]:
     books = []
 
-    json_response = get_json_response_from_get_request(
+    json_response = await get_json_response_from_get_request_async(
         url=OPEN_LIBRARY_API_BASE_URL,
         params={
             "q": search,

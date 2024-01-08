@@ -1,9 +1,11 @@
+from asgiref.sync import sync_to_async
 from django.db.models import QuerySet
 
 from apps.library_admin.models import Author
 from apps.library_admin.exceptions import AuthorDoesNotExist
 
 
+@sync_to_async
 def get_book_author_names_by_book_id(book_id: int) -> QuerySet:
     return (
         Author.objects.filter(book__id=book_id)
