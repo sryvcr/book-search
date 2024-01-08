@@ -150,18 +150,16 @@ def test_create_book():
 
 
 @pytest.mark.django_db
-@pytest.mark.asyncio
 class TestDeleteBook:
-    async def test_delete_book(self, book_system_design_interview_async):
-        result = await book_providers.delete_book(
-            book_id=book_system_design_interview_async.id
-        )
+    def setup_method(self):
+        self.book_1 = book_system_design_interview.make()
+
+    def test_delete_book(self):
+        result = async_to_sync(book_providers.delete_book)(book_id=self.book_1.id)
 
         assert result is True
 
-    async def test_delete_book__does_not_exist_exception(
-        self, book_system_design_interview_async
-    ):
+    def test_delete_book__does_not_exist_exception(self):
         FAKE_BOOK_ID = 9876543210
         with pytest.raises(BookDoesNotExist):
-            await book_providers.delete_book(book_id=FAKE_BOOK_ID)
+            async_to_sync(book_providers.delete_book)(book_id=FAKE_BOOK_ID)
