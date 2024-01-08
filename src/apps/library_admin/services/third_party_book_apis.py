@@ -57,7 +57,7 @@ def __build_book_dataclass_from_google_books_api_data(book_data: dict) -> BookDa
         description = ""
 
     try:
-        image = book_data["imageLinks"]["thumbnail"]
+        image = book_data["volumeInfo"]["imageLinks"]["thumbnail"]
     except KeyError:
         image = ""
 
