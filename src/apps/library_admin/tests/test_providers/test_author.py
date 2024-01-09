@@ -1,5 +1,5 @@
 import pytest
-from unittest import mock
+from asgiref.sync import async_to_sync
 
 from apps.library_admin.exceptions import AuthorDoesNotExist
 from apps.library_admin.models import Author
@@ -22,7 +22,9 @@ class TestGetBookAuthorNamesByBookId:
         self.book.author.add(self.author_2)
 
     def test_get_book_authors(self):
-        result = author_providers.get_book_author_names_by_book_id(book_id=self.book.id)
+        result = async_to_sync(author_providers.get_book_author_names_by_book_id)(
+            book_id=self.book.id
+        )
 
         assert len(result) == 2
         assert self.book.authors[0].name in result
@@ -30,7 +32,9 @@ class TestGetBookAuthorNamesByBookId:
 
     def test_no_book_authors(self):
         FAKE_BOOK_ID = 101001010111
-        result = author_providers.get_book_author_names_by_book_id(book_id=FAKE_BOOK_ID)
+        result = async_to_sync(author_providers.get_book_author_names_by_book_id)(
+            book_id=FAKE_BOOK_ID
+        )
 
         assert len(result) == 0
 
@@ -41,7 +45,7 @@ class TestGetAuthorByAuthorName:
         self.author = author_alex_xu.make()
 
     def test_get_author(self):
-        result = author_providers.get_author_by_author_name(
+        result = async_to_sync(author_providers.get_author_by_author_name)(
             author_name=self.author.name
         )
 
@@ -52,13 +56,15 @@ class TestGetAuthorByAuthorName:
     def test_raise_author_does_not_exist(self):
         FAKE_AUTHOR_NAME = "Fake Author Name"
         with pytest.raises(expected_exception=AuthorDoesNotExist):
-            author_providers.get_author_by_author_name(author_name=FAKE_AUTHOR_NAME)
+            async_to_sync(author_providers.get_author_by_author_name)(
+                author_name=FAKE_AUTHOR_NAME
+            )
 
 
 @pytest.mark.django_db
 def test_create_author():
     AUTHOR_NAME = "Author Name"
-    result = author_providers.create_author(name=AUTHOR_NAME)
+    result = async_to_sync(author_providers.create_author)(name=AUTHOR_NAME)
 
     assert isinstance(result, Author)
     assert result.name == AUTHOR_NAME

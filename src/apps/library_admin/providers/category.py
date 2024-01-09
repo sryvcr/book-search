@@ -14,6 +14,7 @@ def get_book_category_names_by_book_id(book_id: int) -> QuerySet:
     )
 
 
+@sync_to_async
 def get_category_by_category_name(category_name: str) -> bool:
     try:
         return Category.objects.get(name=category_name)
@@ -21,5 +22,6 @@ def get_category_by_category_name(category_name: str) -> bool:
         raise CategoryDoesNotExist()
 
 
+@sync_to_async
 def create_category(name: str):
     return Category.objects.create(name=name)

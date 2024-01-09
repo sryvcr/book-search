@@ -48,9 +48,12 @@ class BookAPIView(APIView):
         source = request.data.get("source")
 
         try:
-            book = book_services.create_book_from_external_source(
-                book_id=book_id, source=source
+            book = await asyncio.gather(
+                book_services.create_book_from_external_source(
+                    book_id=book_id, source=source
+                )
             )
+            book = self.__get_data_from_async_gather(data=book)
         except BookAlreadyCreated as err:
             return BookAlreadyExistsResponse(error_msg=err.msg)
 

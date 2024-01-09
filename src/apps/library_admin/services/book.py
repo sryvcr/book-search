@@ -1,4 +1,3 @@
-from django.db import transaction
 from datetime import datetime
 
 from apps.utils import build_dataclass_from_model_instance
@@ -64,70 +63,74 @@ async def get_books_by_search_parameter(search: str) -> list[BookDataclass]:
     return result
 
 
-def create_book_from_external_source(book_id: str, source: str) -> BookDataclass | None:
+async def create_book_from_external_source(
+    book_id: str, source: str
+) -> BookDataclass | None:
     match source:
         case library_admin_constants.GOOGLE_BOOKS_API_SOURCE:
-            book = third_party_book_apis_service.get_book_from_google_api_by_id(
+            book = await third_party_book_apis_service.get_book_from_google_api_by_id(
                 book_id=book_id
             )
             if book:
                 try:
-                    return create_book_from_google_book_api(book=book)
+                    return await create_book_from_google_book_api(book=book)
                 except BookAlreadyCreated as err:
                     raise err
         case _:
             return None
 
 
-def create_book_from_google_book_api(book: BookDataclass) -> BookDataclass:
-    if not book_providers.check_if_book_exists_by_title(book_title=book.title):
+async def create_book_from_google_book_api(book: BookDataclass) -> BookDataclass:
+    if not await book_providers.check_if_book_exists_by_title(book_title=book.title):
         authors = []
         categories = []
 
-        with transaction.atomic():
-            for author in book.authors:
-                try:
-                    author = author_providers.get_author_by_author_name(
-                        author_name=author
-                    )
-                    authors.append(author)
-                except AuthorDoesNotExist:
-                    author = author_providers.create_author(name=author)
-                    authors.append(author)
-
-            for category in book.categories:
-                try:
-                    category = category_providers.get_category_by_category_name(
-                        category_name=category
-                    )
-                    categories.append(category)
-                except CategoryDoesNotExist:
-                    category = category_providers.create_category(name=category)
-                    categories.append(category)
-
-            book.publication_date = (
-                __validate_and_return_correct_publication_date_format(
-                    publication_date=book.publication_date
+        for author in book.authors:
+            try:
+                author = await author_providers.get_author_by_author_name(
+                    author_name=author
                 )
+                authors.append(author)
+            except AuthorDoesNotExist:
+                author = await author_providers.create_author(name=author)
+                authors.append(author)
+
+        for category in book.categories:
+            try:
+                category = await category_providers.get_category_by_category_name(
+                    category_name=category
+                )
+                categories.append(category)
+            except CategoryDoesNotExist:
+                category = await category_providers.create_category(name=category)
+                categories.append(category)
+
+        book.publication_date = __validate_and_return_correct_publication_date_format(
+            publication_date=book.publication_date
+        )
+
+        new_book = await book_providers.create_book(book=book)
+
+        if authors:
+            await book_providers.add_authors_to_book(book=new_book, authors=authors)
+
+        if categories:
+            await book_providers.add_categories_to_book(
+                book=new_book, categories=categories
             )
 
-            new_book = book_providers.create_book(book=book)
-
-            if authors:
-                new_book.author.set(authors)
-
-            if categories:
-                new_book.category.set(categories)
+        authors = await author_providers.get_book_author_names_by_book_id(
+            book_id=new_book.id
+        )
+        categories = await category_providers.get_book_category_names_by_book_id(
+            book_id=new_book.id
+        )
 
         return build_dataclass_from_model_instance(
             klass=BookDataclass,
             instance=new_book,
-            authors=author_providers.get_book_author_names_by_book_id(
-                book_id=new_book.id
-            ),
-            categories=category_providers.get_book_category_names_by_book_id(
-                book_id=new_book.id
-            ),
+            authors=authors,
+            categories=categories,
             source=library_admin_constants.INTERNAL_SOURCE,
         )
     else:

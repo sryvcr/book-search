@@ -1,4 +1,5 @@
 import pytest
+from asgiref.sync import async_to_sync
 
 from apps.library_admin.exceptions import CategoryDoesNotExist
 from apps.library_admin.models import Category
@@ -21,7 +22,7 @@ class TestGetBookCategoryNamesByBookId:
         self.book.category.add(self.category_2)
 
     def test_get_book_categories(self):
-        result = category_providers.get_book_category_names_by_book_id(
+        result = async_to_sync(category_providers.get_book_category_names_by_book_id)(
             book_id=self.book.id
         )
 
@@ -31,7 +32,7 @@ class TestGetBookCategoryNamesByBookId:
 
     def test_no_book_categories(self):
         FAKE_BOOK_ID = 101001010111
-        result = category_providers.get_book_category_names_by_book_id(
+        result = async_to_sync(category_providers.get_book_category_names_by_book_id)(
             book_id=FAKE_BOOK_ID
         )
 
@@ -44,7 +45,7 @@ class TestGetCategoryByCategoryName:
         self.category = category_web_development.make()
 
     def test_get_category(self):
-        result = category_providers.get_category_by_category_name(
+        result = async_to_sync(category_providers.get_category_by_category_name)(
             category_name=self.category.name
         )
 
@@ -55,7 +56,7 @@ class TestGetCategoryByCategoryName:
     def test_raise_category_does_not_exist(self):
         FAKE_CATEGORY_NAME = "Fake Category Name"
         with pytest.raises(expected_exception=CategoryDoesNotExist):
-            category_providers.get_category_by_category_name(
+            async_to_sync(category_providers.get_category_by_category_name)(
                 category_name=FAKE_CATEGORY_NAME
             )
 
@@ -63,7 +64,7 @@ class TestGetCategoryByCategoryName:
 @pytest.mark.django_db
 def test_create_category():
     CATEGORY_NAME = "Category Name"
-    result = category_providers.create_category(name=CATEGORY_NAME)
+    result = async_to_sync(category_providers.create_category)(name=CATEGORY_NAME)
 
     assert isinstance(result, Category)
     assert result.name == CATEGORY_NAME

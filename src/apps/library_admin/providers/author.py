@@ -14,6 +14,7 @@ def get_book_author_names_by_book_id(book_id: int) -> QuerySet:
     )
 
 
+@sync_to_async
 def get_author_by_author_name(author_name: str) -> bool:
     try:
         return Author.objects.get(name=author_name)
@@ -21,5 +22,6 @@ def get_author_by_author_name(author_name: str) -> bool:
         raise AuthorDoesNotExist()
 
 
+@sync_to_async
 def create_author(name: str):
     return Author.objects.create(name=name)

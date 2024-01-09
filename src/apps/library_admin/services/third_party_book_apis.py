@@ -82,8 +82,8 @@ def __build_book_dataclass_from_google_books_api_data(book_data: dict) -> BookDa
     )
 
 
-def get_book_from_google_api_by_id(book_id: str) -> BookDataclass:
-    book_data = get_json_response_from_get_request(
+async def get_book_from_google_api_by_id(book_id: str) -> BookDataclass:
+    book_data = await get_json_response_from_get_request_async(
         url=f"{GOOGLE_BOOK_API_BASE_URL}/{book_id}", params={}
     )
 

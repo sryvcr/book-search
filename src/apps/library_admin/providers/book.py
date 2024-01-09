@@ -3,7 +3,7 @@ from django.db.models import Q, QuerySet
 
 from apps.library_admin.dataclasses import BookDataclass
 from apps.library_admin.exceptions import BookDoesNotExist
-from apps.library_admin.models import Book
+from apps.library_admin.models import Book, Author, Category
 
 
 @sync_to_async
@@ -27,10 +27,12 @@ def get_books_by_search_parameter(search: str) -> QuerySet:
     )
 
 
+@sync_to_async
 def check_if_book_exists_by_title(book_title: str) -> bool:
     return Book.objects.filter(title=book_title).exists()
 
 
+@sync_to_async
 def create_book(book: Book | BookDataclass) -> Book:
     return Book.objects.create(
         title=book.title,
@@ -49,3 +51,13 @@ def delete_book(book_id: int) -> bool:
         return True
     except Book.DoesNotExist:
         raise BookDoesNotExist()
+
+
+@sync_to_async
+def add_authors_to_book(book: Book, authors: list[Author]) -> None:
+    book.author.set(authors)
+
+
+@sync_to_async
+def add_categories_to_book(book: Book, categories: list[Category]) -> None:
+    book.category.set(categories)

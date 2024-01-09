@@ -118,7 +118,9 @@ class TestGetBooksBySearchParameter:
 def test_check_if_book_exists_by_title(exists, book_title):
     book_clean_architecture.make()
 
-    result = book_providers.check_if_book_exists_by_title(book_title=book_title)
+    result = async_to_sync(book_providers.check_if_book_exists_by_title)(
+        book_title=book_title
+    )
 
     assert result == exists
 
@@ -138,7 +140,7 @@ def test_create_book():
         source="",
     )
 
-    result = book_providers.create_book(book=book_dataclass)
+    result = async_to_sync(book_providers.create_book)(book=book_dataclass)
 
     assert isinstance(result, Book)
     assert result.title == book_dataclass.title
