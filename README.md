@@ -37,4 +37,7 @@ To run tests execute:
 $ make test
 ```
 
-**NOTE**: You can find a postman collection file inside the project, this file contains all the requests urls and their example of different responses
+**NOTE**: You can find a postman collection file inside the project, this file contains all the requests urls and their example of different responses.
+
+
+**NOTE 2**: You can change to `feat/make-requests-async` git branch, to use project with async requests.
