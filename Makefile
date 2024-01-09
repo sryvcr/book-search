@@ -4,6 +4,9 @@ up:
 down:
 	@docker-compose down --remove-orphans
 
+rebuild:
+	@docker-compose up --build -d
+
 sh:
 	@docker exec -it library-svc sh
 
